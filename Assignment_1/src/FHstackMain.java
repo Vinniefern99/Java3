@@ -4,7 +4,7 @@
 // import statement needed to gain access to the entire class
 import cs_1c.*;
 
-public class Foothill
+public class FHstackMain
 {
    public static void main (String[] args) throws CloneNotSupportedException
    {
