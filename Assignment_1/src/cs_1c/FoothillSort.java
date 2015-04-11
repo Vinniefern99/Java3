@@ -8,7 +8,7 @@ public class FoothillSort
    {
       boolean changed = false;
       E temp;
-      
+
       if ( !(data[0] instanceof String) )
       {
          // stop at top-1 = (worst case) arraySize-2 due to k+1 in loop
@@ -39,7 +39,7 @@ public class FoothillSort
       }        
       return changed;
    }
-   
+
    public static <E extends Comparable<? super E>> 
    void arraySort(E[] array)
    {
@@ -47,7 +47,7 @@ public class FoothillSort
          if ( !floatLargestToTop(array, array.length - 1 - k) )
             return;
    }
-    
+
    // print out array with string as a title for the message box
    public static <E>
    void printArray(String title, E[] data)
