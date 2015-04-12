@@ -2,6 +2,10 @@ package Assignment_1;
 
 import java.util.*;
 
+
+//------------------- Part A Sublist - ints -------------------
+
+
 class Sublist implements Cloneable
 {
    private int sum = 0;
@@ -21,23 +25,23 @@ class Sublist implements Cloneable
       return sum; 
    }
 
-
    Sublist addItem( int indexOfItemToAdd ) throws CloneNotSupportedException
    { 
       Sublist newSublist = (Sublist)clone();
-      
+
       newSublist.indices.add(indexOfItemToAdd);
-      newSublist.sum = newSublist.sum + indexOfItemToAdd;
-      
+      newSublist.sum = newSublist.sum + originalObjects.get(indexOfItemToAdd);
+
       return newSublist;
    }
 
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + k + "] = " + originalObjects.get(k));
+         System.out.println("array[" + k + "] = " 
+               + originalObjects.get(indices.get(k)));
    }
-   
+
    // I have done the clone() for you, since you will need it inside addItem().
    // I moved the clone function to the end, cause that's what I'm used to.
    public Object clone() throws CloneNotSupportedException
@@ -50,3 +54,8 @@ class Sublist implements Cloneable
       return newObject;
    }
 };
+
+
+
+//------------------- Part B Sublist - iTunesEntries -------------------
+
