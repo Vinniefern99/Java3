@@ -30,7 +30,6 @@ class Sublist implements Cloneable
       newSublist.sum = newSublist.sum + indexOfItemToAdd;
       
       return newSublist;
-      
    }
 
    void showSublist()
