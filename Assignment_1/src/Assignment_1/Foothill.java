@@ -5,13 +5,17 @@ import java.util.*;
 public class Foothill
 {
    // -------  main --------------
+   @SuppressWarnings("unchecked")
    public static void main(String[] args) throws Exception
    {
       int target = 72;
       ArrayList<Integer> dataSet = new ArrayList<Integer>();
       ArrayList<Sublist> choices = new ArrayList<Sublist>();
+      //I'm using a temChoice to make a copy of choices.
+      //Used in the for loop below
+      ArrayList<Sublist> tempChoices = new ArrayList<Sublist>();
       int k, j, numSets, max, kBest, masterSum;
-      boolean foundPerfect;
+      boolean foundPerfect = false;
 
       masterSum = 0;
 
@@ -26,46 +30,43 @@ public class Foothill
       //setting the first empty set to the best
       kBest = 0;
 
-      //System.out.println(dataSet.size());
-
       //adds all possible sublists to the Array List choices.
       mainLoop:
          for (k = 0 ; k < dataSet.size() ; k++)
-         {
-            ArrayList<Sublist> tempChoices = new ArrayList<Sublist>();
-            tempChoices = (ArrayList<Sublist>)choices.clone();
-            
+         {  
+            tempChoices.clear();
             for (j = 0 ; j < choices.size() ; j++)
+               tempChoices.add((Sublist)choices.get(j).clone());
+
+            for (j = 0 ; j < tempChoices.size() ; j++)
             {
-               //System.out.println(k);
-               int newPossibleSum = choices.get(j).getSum() + dataSet.get(k);
-               //System.out.println(newPossibleSum);
+               int newPossibleSum = tempChoices.get(j).getSum() + dataSet.get(k);
+
                if (newPossibleSum <= target)
                {
-                  //System.out.println("test");
                   choices.add(choices.get(j).addItem(dataSet.get(k)));
+                  numSets++;
                }
 
                if (newPossibleSum == target)
                {
-                  masterSum = target;
+                  kBest = choices.size()-1;
                   foundPerfect = true;
                   break mainLoop;
                }
-
-               //System.out.println(choices.size());
-
             }
          }
 
 
-      //System.out.println(choices.size());
-
+      if (!foundPerfect)
+      {
+         for (k = 0 ; k < choices.size() ; k++)
+         {
+            if (choices.get(k).getSum() > masterSum)
+               kBest = k;
+         }
+      }
       
-
-      //choices.get(6).showSublist();
-
-      //System.out.println(kBest);
       choices.get(kBest).showSublist();
    }
 }
