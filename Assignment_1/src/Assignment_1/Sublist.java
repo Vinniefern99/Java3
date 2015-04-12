@@ -35,7 +35,7 @@ class Sublist implements Cloneable
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + k + "] = " + indices.get(k));
+         System.out.println("array[" + k + "] = " + originalObjects.get(k));
    }
    
    // I have done the clone() for you, since you will need it inside addItem().
