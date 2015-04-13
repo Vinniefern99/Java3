@@ -40,7 +40,7 @@ class Sublist implements Cloneable
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + k + "] = " 
+         System.out.println("array[" + indices.get(k) + "] = " 
                + originalObjects.get(indices.get(k)));
    }
 
@@ -94,7 +94,7 @@ class Sublist implements Cloneable
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + k + "] = " 
+         System.out.println("array[" + indices.get(k) + "] = " 
                + originalObjects.get(indices.get(k)).toString());
    }
 
