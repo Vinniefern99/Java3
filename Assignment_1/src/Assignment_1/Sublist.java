@@ -5,8 +5,8 @@ import java.text.*;
 import java.util.*;
 
 /*
-//------------------- Part A Sublist - ints -------------------
 
+//------------------- Part A Sublist - ints -------------------
 
 class Sublist implements Cloneable
 {
@@ -40,7 +40,7 @@ class Sublist implements Cloneable
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + indices.get(k) + "] = " 
+         System.out.println("  array[" + indices.get(k) + "] = " 
                + originalObjects.get(indices.get(k)));
    }
 
@@ -94,12 +94,11 @@ class Sublist implements Cloneable
    void showSublist()
    { 
       for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("array[" + indices.get(k) + "] = " 
+         System.out.println("  array[" + indices.get(k) + "] = " 
                + originalObjects.get(indices.get(k)).toString());
    }
 
    // I have done the clone() for you, since you will need it inside addItem().
-   // I moved the clone function to the end, cause that's what I'm used to.
    public Object clone() throws CloneNotSupportedException
    {
       // shallow copy

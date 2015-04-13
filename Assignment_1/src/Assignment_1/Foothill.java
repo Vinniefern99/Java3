@@ -17,7 +17,7 @@ public class Foothill
       int target = 72;
       ArrayList<Integer> dataSet = new ArrayList<Integer>();
       ArrayList<Sublist> choices = new ArrayList<Sublist>();
-      int k, j, numSets, max, kBest, masterSum, tempNumsets;
+      int k, j, numSets, max, kBest, masterSum, tempNumsets, newPossibleSum;
       boolean foundPerfect = false;
 
       dataSet.add(2); dataSet.add(12); dataSet.add(22);
@@ -36,7 +36,7 @@ public class Foothill
          //display entire dataSet as solution and exit program.
          System.out.println("   Sum: " + masterSum);
          for (k = 0 ; k < dataSet.size() ; k++)
-            System.out.println("   array[" + k + "] = " + dataSet.get(k));
+            System.out.println("  array[" + k + "] = " + dataSet.get(k));
          System.exit(0);
       }
 
@@ -54,7 +54,7 @@ public class Foothill
 
             for (j = 0 ; j < tempNumsets ; j++)
             {             
-               int newPossibleSum = choices.get(j).getSum() + dataSet.get(k);
+               newPossibleSum = choices.get(j).getSum() + dataSet.get(k);
 
                if (newPossibleSum <= target)
                {
@@ -94,7 +94,7 @@ public class Foothill
 
       //System.out.println(choices.get(kBest).getSum());
 
-      System.out.println("   Sum: " + choices.get(kBest).getSum());
+      System.out.println("  Sum: " + choices.get(kBest).getSum());
       choices.get(kBest).showSublist();
 
    }
@@ -105,20 +105,16 @@ public class Foothill
 
 //----------------- Part B Client - ArrayList of ItunesEntries ------
 
-import cs_1c.*;
-import java.text.*;
-import java.util.*;
-
-//------------------------------------------------------
 public class Foothill
 {
    // -------  main --------------
    public static void main(String[] args) throws Exception
    {
-      int target = 3600;
+      int target = 3600666;
       ArrayList<iTunesEntry> dataSet = new ArrayList<iTunesEntry>();
       ArrayList<Sublist> choices = new ArrayList<Sublist>();
-      int k, j, numSets, max, kBest, arraySize, masterSum, tempNumsets;
+      int k, j, numSets, max, kBest, arraySize;
+      int masterSum, tempNumsets, newPossibleSum;
       boolean foundPerfect = false;
 
       // for formatting and timing
@@ -146,8 +142,6 @@ public class Foothill
       System.out.println("Target time: " + target);
       System.out.println("Sublist -------------------");
 
-      // code supplied by student
-
       //test if target is larger than the sum of all elements in the master set.
       masterSum = 0;
       for (k = 0 ; k < dataSet.size() ; k++)
@@ -155,9 +149,9 @@ public class Foothill
       if (masterSum < target)
       {
          //display entire dataSet as solution and exit program.
-         System.out.println("   Sum: " + masterSum);
+         System.out.println("  Sum: " + masterSum);
          for (k = 0 ; k < dataSet.size() ; k++)
-            System.out.println("   array[" + k + "] = " 
+            System.out.println("  array[" + k + "] = " 
                   + dataSet.get(k).toString());
          System.exit(0);
       }
@@ -176,7 +170,8 @@ public class Foothill
 
             for (j = 0 ; j < tempNumsets ; j++)
             {             
-               int newPossibleSum = choices.get(j).getSum() + dataSet.get(k).getTime();
+               newPossibleSum = choices.get(j).getSum() 
+                     + dataSet.get(k).getTime();
 
                if (newPossibleSum <= target)
                {
@@ -186,7 +181,6 @@ public class Foothill
 
                if (newPossibleSum == target)
                {
-                  //System.out.println(choices.size()-1);
                   kBest = choices.size()-1;
                   foundPerfect = true;
                   break mainLoop;
@@ -204,8 +198,7 @@ public class Foothill
                kBest = k;
             }
 
-
-
+      System.out.println("  Sum: " + choices.get(kBest).getSum());
       choices.get(kBest).showSublist();
    }
 }
