@@ -4,10 +4,10 @@ import cs_1c.*;
 import java.text.*;
 import java.util.*;
 
+
 /*
-
-//------------------- Part A Sublist - ints -------------------
-
+ * Part A - Sublist class
+ */
 class Sublist implements Cloneable
 {
    private int sum = 0;
@@ -56,11 +56,13 @@ class Sublist implements Cloneable
       return newObject;
    }
 };
-*/
 
 
-//------------------- Part B Sublist - iTunesEntries -------------------
 
+
+/*
+ * Part B - Sublist class
+ *
 class Sublist implements Cloneable
 {
    private int sum = 0;
@@ -110,3 +112,4 @@ class Sublist implements Cloneable
    }
 };
 
+ */

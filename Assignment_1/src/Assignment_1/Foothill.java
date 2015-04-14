@@ -1,13 +1,15 @@
 package Assignment_1;
 
 import cs_1c.*;
+
 import java.text.*;
 import java.util.*;
 
 
-/*
-//------------------- Part A Client - ArrayList of ints -------------------
 
+/*
+ * Part A - Main Foothill Client
+ */
 public class Foothill
 {
    // -------  main --------------
@@ -27,7 +29,7 @@ public class Foothill
       System.out.println("Target time: " + target);
       System.out.println("Sublist -------------------");
 
-      //test if target is larger than the sum of all elements in the master set.
+      //test if target is larger than the sum of all elements in master set.
       masterSum = 0;
       for (k = 0 ; k < dataSet.size() ; k++)
          masterSum = masterSum + dataSet.get(k);
@@ -37,7 +39,7 @@ public class Foothill
          System.out.println("   Sum: " + masterSum);
          for (k = 0 ; k < dataSet.size() ; k++)
             System.out.println("  array[" + k + "] = " + dataSet.get(k));
-         System.exit(0);
+         return;
       }
 
       //create an empty sublist and add it as first element in choices.
@@ -82,35 +84,24 @@ public class Foothill
                kBest = k;
             }
 
-
-      //System.out.println("hi");
-      //for (k = 0 ; k < dataSet.size() ; k++)
-      //{
-         //choices.get(k).showSublist();
-         //System.out.println(k); 
-         //System.out.println(choices.get(k).getSum());
-         //System.out.println();
-      //}
-
-      //System.out.println(choices.get(kBest).getSum());
-
       System.out.println("  Sum: " + choices.get(kBest).getSum());
       choices.get(kBest).showSublist();
 
    }
 }
 
- */
 
 
-//----------------- Part B Client - ArrayList of ItunesEntries ------
 
+/*
+ * Part B - Main Foothill Client
+ *
 public class Foothill
 {
    // -------  main --------------
    public static void main(String[] args) throws Exception
    {
-      int target = 3600666;
+      int target = 36755;
       ArrayList<iTunesEntry> dataSet = new ArrayList<iTunesEntry>();
       ArrayList<Sublist> choices = new ArrayList<Sublist>();
       int k, j, numSets, max, kBest, arraySize;
@@ -153,13 +144,16 @@ public class Foothill
          for (k = 0 ; k < dataSet.size() ; k++)
             System.out.println("  array[" + k + "] = " 
                   + dataSet.get(k).toString());
-         System.exit(0);
+         return;
       }
 
       //create an empty sublist and add it as first element in choices.
       Sublist newSublist = new Sublist(dataSet);
       choices.add(newSublist);
       numSets = 1;
+
+      // START TIME -------------------------------
+      startTime = System.nanoTime();
 
       //adds all possible sublists to choices.
       kBest = 0;
@@ -198,11 +192,20 @@ public class Foothill
                kBest = k;
             }
 
+      // end timing
+      stopTime = System.nanoTime();
+
       System.out.println("  Sum: " + choices.get(kBest).getSum());
       choices.get(kBest).showSublist();
+
+      // report algorithm time
+      System.out.println("\nAlgorithm Elapsed Time: "
+            + tidy.format((stopTime - startTime) / 1e9)
+            + " seconds.\n");
+
    }
 }
 
 
-
+ */
 
