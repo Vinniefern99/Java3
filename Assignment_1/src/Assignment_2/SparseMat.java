@@ -88,18 +88,20 @@ public class SparseMat<E> implements Cloneable
    // An accessor that returns the object stored in row r and column c.  
    // It throws an IndexOutOfBoundsException  
    // if matrix bounds (row and/or column) are violated.
-   public E get(int r, int c)
+   public E get(int row, int column)
    {
-      if (r < rowSize || c > colSize)
+      if (row < rowSize || column > colSize)
          throw new IndexOutOfBoundsException();
 
       ListIterator<SparseMat<E>.MatNode> p;
       
-      FHlinkedList<MatNode> currentRow = rows.get(r);
+      FHlinkedList<MatNode> currentRow = rows.get(row-1);
 
       for (p = currentRow.listIterator() ; p.hasNext() ; )
       {
-         
+         if (p.next().column == column)
+            return p.previous();
+            
       }
       
       return defaultVal;
