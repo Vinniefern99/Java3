@@ -1,10 +1,8 @@
 package Assignment_2;
 
-import java.util.ListIterator;
+import java.util.*;
 
-import cs_1c.FHarrayList;
-import cs_1c.FHlinkedList;
-import cs_1c.FHlinkedList.Node;
+import cs_1c.*;
 
 //--------------- Class SparseMat Definition ---------------
 public class SparseMat<E> implements Cloneable
@@ -14,7 +12,7 @@ public class SparseMat<E> implements Cloneable
    {
       public int column;
       public E data;
-      
+
       // we need a default constructor for lists
       MatNode()
       {
@@ -27,7 +25,7 @@ public class SparseMat<E> implements Cloneable
          column = col;
          this.data = data;
       }
-      
+
       public Object clone() throws CloneNotSupportedException
       {
          // shallow copy
@@ -94,18 +92,17 @@ public class SparseMat<E> implements Cloneable
          throw new IndexOutOfBoundsException();
 
       ListIterator<SparseMat<E>.MatNode> p;
-      
+
       FHlinkedList<MatNode> currentRow = rows.get(row-1);
 
       for (p = currentRow.listIterator() ; p.hasNext() ; )
       {
          if (p.next().column == column)
-            return p.previous();
-            
-      }
-      
-      return defaultVal;
+            return p.previous().data;
 
+      }
+
+      return defaultVal;
    }
 
    // A mutator that places x in row r and column c.   It returns false 
@@ -115,8 +112,31 @@ public class SparseMat<E> implements Cloneable
    // need to store the default value explicitly.  Of course, if there is 
    // no node present in the internal data representation, set() will add 
    // one if x is not default and store x in it.
-   public boolean set(int r, int c, E x) 
+   public boolean set(int row, int column, E x) 
    {
+      if (row < rowSize || column > colSize)
+         return false;
+
+      FHlinkedList<MatNode> currentRow = rows.get(row-1);
+
+      ListIterator<SparseMat<E>.MatNode> p;
+
+      for (p = currentRow.listIterator() ; p.hasNext() ; )
+      {
+         if (p.next().column == column)
+         {
+            if ( p.previous().data != defaultVal)
+            {
+               p.remove(); 
+               currentRow.add(p.nextIndex(), new MatNode(column, x));
+            }
+            else
+               p.remove(); 
+         }
+
+      }
+
+      return true;
 
    }
 
