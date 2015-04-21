@@ -40,14 +40,16 @@ public class SparseMat<E> implements Cloneable
    protected FHarrayList < FHlinkedList< MatNode > > rows;
 
 
-   final int MAX_ROW_OR_COLUMN_SIZE = 1000;
+   final int MAX_ROW_OR_COLUMN_SIZE = 1000000;
    final int DEFAULT_ROW_OR_COL_SIZE = 100;
-   private int k, numRows;
+   private int j, k, numRows;
+   
+   ListIterator<SparseMat<E>.MatNode> p;
 
    // A constructor that establishes a size (row size and column size both > 1) 
    // as well as a default value for all elements.  It will allocate all the 
    // memory of an empty matrix by calling a private utility void allocateEmptyMatrix().
-   public void SparseMat( int numRows, int numCols, E defaultVal) 
+   public SparseMat( int numRows, int numCols, E defaultVal) 
    {
       if (isValidSize(numRows, numCols))
       {
@@ -60,7 +62,7 @@ public class SparseMat<E> implements Cloneable
          colSize = DEFAULT_ROW_OR_COL_SIZE;
       }
 
-      defaultVal = defaultVal;
+      this.defaultVal = defaultVal;
       allocateEmptyMatrix();
 
    }
@@ -88,10 +90,8 @@ public class SparseMat<E> implements Cloneable
    // if matrix bounds (row and/or column) are violated.
    public E get(int row, int column)
    {
-      if (row < rowSize || column > colSize)
+      if (row > rowSize || column > colSize)
          throw new IndexOutOfBoundsException();
-
-      ListIterator<SparseMat<E>.MatNode> p;
 
       FHlinkedList<MatNode> currentRow = rows.get(row-1);
 
@@ -114,15 +114,12 @@ public class SparseMat<E> implements Cloneable
    // one if x is not default and store x in it.
    public boolean set(int row, int column, E x) 
    {
-      if (row < rowSize || column > colSize)
+      if (row > rowSize || column > colSize)
          return false;
 
-      FHlinkedList<MatNode> currentRow = rows.get(row-1);
-
-      ListIterator<SparseMat<E>.MatNode> p;
+      FHlinkedList<MatNode> currentRow = rows.get(row);
 
       for (p = currentRow.listIterator() ; p.hasNext() ; )
-      {
          if (p.next().column == column)
          {
             if ( p.previous().data != defaultVal)
@@ -133,8 +130,6 @@ public class SparseMat<E> implements Cloneable
             else
                p.remove(); 
          }
-
-      }
 
       return true;
 
@@ -154,6 +149,23 @@ public class SparseMat<E> implements Cloneable
    // since we obviously cannot see the entire matrix at once.
    public void showSubSquare(int start, int size) 
    {
+      for (j = start ; j < size ; j++)
+      {
+         for (k = start ; k <size ; k++ )
+         {
+            for (p = rows.get(j).listIterator() ; p.hasNext() ; )
+            {
+               if (p.next().column == k)
+               {
+                  System.out.println("  " + rows.get(j).get(p.previousIndex()));
+               }
+               else
+               {
+                  System.out.println("  " + defaultVal.toString());
+               }
+            }
+         }
+      }
 
    }
 
