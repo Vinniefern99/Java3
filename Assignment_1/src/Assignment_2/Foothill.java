@@ -28,9 +28,14 @@ public class Foothill
       }
 
       mat.showSubSquare(0, 12);
+      mat.clear();
+      
       System.out.println();
-
-      SparseMat<Double> mat2 = (SparseMat<Double>)mat.clone();
+      mat.showSubSquare(0, 12);
+      
+      System.out.println();
+      
+      //SparseMat<Double> mat2 = (SparseMat<Double>)mat.clone();
 
       for (k = 0; k < 10; k++)
       {
@@ -41,6 +46,6 @@ public class Foothill
 
       mat.showSubSquare(0, 12);
       System.out.println();
-      mat2.showSubSquare(0, 12);
+     // mat2.showSubSquare(0, 12);
    }
 }
