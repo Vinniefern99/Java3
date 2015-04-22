@@ -124,8 +124,6 @@ public class SparseMat<E> implements Cloneable
 
       FHlinkedList<MatNode> currentRow = rows.get(row);
 
-      //p = currentRow.listIterator();
-
       for (int k = 0 ; k < currentRow.size() ; k++)
       {
          MatNode tempNode = currentRow.get(k);
@@ -134,6 +132,7 @@ public class SparseMat<E> implements Cloneable
          {
             currentRow.remove(k);
             currentRow.add(k, new MatNode(column, x));
+            return true;
          }   
       }
 
@@ -173,5 +172,26 @@ public class SparseMat<E> implements Cloneable
       }
    }
 
+   
+   //Part B - clone()
+   public Object clone() throws CloneNotSupportedException
+   {
+      // shallow copy
+      SparseMat<E> newObject = (SparseMat<E>)super.clone();
+      // deep copy
+      
+      for (int k = 0 ; k < this.rows.size() ; k++)
+      {
+         for (j = 0 ; j < this.rows.get(k).size() ; j ++)
+         {
+            newObject.rows.get(k).get(j).column = this.rows.get(k).get(j).column;
+            newObject.rows.get(k).get(j).data = this.rows.get(k).get(j).data;
+ 
+         }
+         
+      }
+
+      return newObject;
+   }
 
 }
