@@ -162,7 +162,7 @@ public class SparseMat<E> implements Cloneable
       {
          for (j = start ; j < (start + size) ; j++)
          {
-            double intToDisplay = (double)get(k, j);
+            Double intToDisplay = (Double)get(k, j);
             if (intToDisplay < 10)
                System.out.print("  " + intToDisplay);
             else
