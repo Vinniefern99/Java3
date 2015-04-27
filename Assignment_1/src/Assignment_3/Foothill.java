@@ -123,6 +123,7 @@ public class Foothill
 
 }
 
+// -------------------Part B --------------------------
 
 class SparseMatWMult extends SparseMat<Double>
 {
