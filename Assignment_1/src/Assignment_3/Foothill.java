@@ -10,7 +10,7 @@ import cs_1c.*;
 
 public class Foothill
 {
-   final static int MAT_SIZE = 40;
+   final static int MAT_SIZE = 400;
 
    final static int MIN_SIZE_FOR_10X10_DISPLAY = 10;
    final static int MIN_SIZE_FOR_5X5_DISPLAY = 5;
@@ -53,7 +53,7 @@ public class Foothill
       matMult(mat, mat, matAns);
       stopTime = System.nanoTime();
 
-      /* While I test part B
+      System.out.println("** Part A **\n");
 
       if (MAT_SIZE >= MIN_SIZE_FOR_10X10_DISPLAY)
       {
@@ -81,10 +81,10 @@ public class Foothill
             + " seconds.");
 
 
-      System.out.println(matAns[397][399]);
-      // Second part of main for Part B
+      System.out.println("\n\n** Part B **\n");
 
-       */
+
+      //System.out.println(matAns[397][399]);
 
       SparseMatWMult sparseMat, sparseMatAns;
 
@@ -103,9 +103,6 @@ public class Foothill
       sparseMatAns.matMult(sparseMat, sparseMat);
 
       sparseMatAns.showSubSquare(10, 10);
-
-
-
 
    }
 
@@ -498,6 +495,15 @@ M time table in factors of 100
 1300     31.2198 
 1400     37.5636
 1500     47.7805
+1600     59.4802
+
+M time table, doubling previous one
+100      0.0196
+200      0.0524
+400      0.5064
+800      5.9566
+1600     59.4802
+
 
 M time table, starting with 20 and increasing by 20^n
  *M*      *Time in Seconds*
