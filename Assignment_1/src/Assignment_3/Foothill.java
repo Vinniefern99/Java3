@@ -10,7 +10,10 @@ import cs_1c.*;
 
 public class Foothill
 {
-   final static int MAT_SIZE = 300;
+   final static int MAT_SIZE = 40;
+
+   final static int MIN_SIZE_FOR_10X10_DISPLAY = 10;
+   final static int MIN_SIZE_FOR_5X5_DISPLAY = 5;
 
    public static void main(String[] args) throws Exception
    {
@@ -24,7 +27,7 @@ public class Foothill
       // non-sparse matrices
       double[][] mat, matAns;
 
-      defaultVal = 0;
+      defaultVal = 0.;
 
       // allocate matrices
       mat = new double[MAT_SIZE][MAT_SIZE]; 
@@ -40,42 +43,70 @@ public class Foothill
       smallPercent = MAT_SIZE/10. * MAT_SIZE;
       for (r = 0; r < smallPercent; r++)
       {
-         //test if the position has already been modified
-         while (mat[randRow = randIntInRange()][randCol = randIntInRange()] 
-               != defaultVal) {}
+         randRow = randIntInRange();
+         randCol = randIntInRange();
 
          mat[randRow][randCol] = (double)Math.random();
       }
-
-      System.out.println("**** Submatrices before multiplication: ****\n");
-      // 5x5 submatrix in lower right
-      System.out.println("5x5 submatrix in lower right "
-            + "(for testing matricies with 5x5)");
-      matShow(mat, MAT_SIZE - 5, 5);
-
-      // 10x10 submatrix in lower right
-      System.out.println("10x10 submatrix in lower right "
-            + "(for testing matricies >= 10x10)");
-      matShow(mat, MAT_SIZE - 10, 10);
 
       startTime = System.nanoTime();
       matMult(mat, mat, matAns);
       stopTime = System.nanoTime();
 
-      System.out.println("\n**** Submatrices after multiplication: ****\n");
-      // 5x5 submatrix in lower right
-      System.out.println("5x5 submatrix in lower right "
-            + "(for testing matricies with 5x5)");
-      matShow(matAns, MAT_SIZE - 5, 5);
+      /* While I test part B
 
-      // 10x10 submatrix in lower right
-      System.out.println("10x10 submatrix in lower right "
-            + "(for testing matricies >= 10x10)");
-      matShow(matAns, MAT_SIZE - 10, 10);
+      if (MAT_SIZE >= MIN_SIZE_FOR_10X10_DISPLAY)
+      {
+         // 10x10 submatrix in lower right
+         System.out.println("10x10 submatrix(lower right) before multiplication:");
+         matShow(mat, MAT_SIZE - 10, 10);
+
+         // 10x10 submatrix in lower right
+         System.out.println("10x10 submatrix(lower right) after multiplication:");
+         matShow(matAns, MAT_SIZE - 10, 10);
+      }
+
+      if (MAT_SIZE >= MIN_SIZE_FOR_5X5_DISPLAY)
+      {
+         // 5x5 submatrix in lower right
+         System.out.println("5x5 submatrix(lower right) before multiplication:");
+         matShow(mat, MAT_SIZE - 5, 5);
+
+         System.out.println("5x5 submatrix(lower right) after multiplication:");
+         matShow(matAns, MAT_SIZE - 5, 5);
+      }
 
       System.out.println("\nSize = " + MAT_SIZE + " Mat. Mult. Elapsed Time: "
             + tidy.format( (stopTime - startTime) / 1e9)
             + " seconds.");
+
+
+      System.out.println(matAns[397][399]);
+      // Second part of main for Part B
+
+       */
+
+      SparseMatWMult sparseMat, sparseMatAns;
+
+      sparseMat = new SparseMatWMult(MAT_SIZE, MAT_SIZE, defaultVal);
+      sparseMatAns = new SparseMatWMult(MAT_SIZE, MAT_SIZE, defaultVal);
+
+      for (r = 0; r < smallPercent; r++)
+      {
+         randRow = randIntInRange();
+         randCol = randIntInRange();
+
+         sparseMat.set(randRow, randCol, (double)Math.random());
+      }
+
+      sparseMat.showSubSquare(10, 10);
+      sparseMatAns.matMult(sparseMat, sparseMat);
+
+      sparseMatAns.showSubSquare(10, 10);
+
+
+
+
    }
 
    public static void matMult( double[][] matA, double[][] matB, 
@@ -128,7 +159,7 @@ public class Foothill
 class SparseMatWMult extends SparseMat<Double>
 {
    // constructor ??
-  
+
    public SparseMatWMult(int numRows, int numCols, Double defaultVal)
    {
       super(numRows, numCols, defaultVal);
@@ -138,185 +169,205 @@ class SparseMatWMult extends SparseMat<Double>
    // multiply:
    public boolean matMult(SparseMatWMult matA, SparseMatWMult matB)
    {
-     // ??
+      ListIterator<MatNode> iter;
+
+
+      for (int j = 0; j < this.rowSize; j++)
+      {
+         for (int k = 0 ; k < this.rowSize ; k++)
+         {
+            double totalForCurrNode = defaultVal;
+
+            for (int l = 0; l < this.rowSize ; l++)
+            {
+               if (matA.get(j,l) != this.defaultVal &&
+                     matB.get(l, k) != this.defaultVal)
+                  totalForCurrNode += matA.get(j,l) * matB.get(l, k);
+            }  
+
+            if (totalForCurrNode != defaultVal)
+               this.set(j, k, totalForCurrNode);
+         }
+      }
+
+      return true;
+
    }
 }
 
 
-//Adding this class for the extra credit part
-
 //--------------- Class SparseMat Definition ---------------
 class SparseMat<E> implements Cloneable
 {
- // protected enables us to safely make col/data public
- protected class MatNode implements Cloneable
- {
-    public int col;
-    public E data;
+   // protected enables us to safely make col/data public
+   protected class MatNode implements Cloneable
+   {
+      public int col;
+      public E data;
 
-    // we need a default constructor for lists
-    MatNode()
-    {
-       col = 0;
-       data = null;
-    }
+      // we need a default constructor for lists
+      MatNode()
+      {
+         col = 0;
+         data = null;
+      }
 
-    MatNode(int cl, E dt)
-    {
-       col = cl;
-       data = dt;
-    }
+      MatNode(int cl, E dt)
+      {
+         col = cl;
+         data = dt;
+      }
 
-    public Object clone() throws CloneNotSupportedException
-    {
-       // shallow copy
-       MatNode newObject = (MatNode)super.clone();
-       return (Object) newObject;
-    }
- }
+      public Object clone() throws CloneNotSupportedException
+      {
+         // shallow copy
+         MatNode newObject = (MatNode)super.clone();
+         return (Object) newObject;
+      }
+   }
 
- static public final int MIN_SIZE = 1;
- protected int rowSize, colSize;
- protected E defaultVal;
- protected FHarrayList < FHlinkedList< MatNode > > rows;
+   static public final int MIN_SIZE = 1;
+   protected int rowSize, colSize;
+   protected E defaultVal;
+   protected FHarrayList < FHlinkedList< MatNode > > rows;
 
- public int getRowSize() { return rowSize; }
- public int getColSize() { return colSize; }
+   public int getRowSize() { return rowSize; }
+   public int getColSize() { return colSize; }
 
- // constructor creates an empty Sublist (no indices)
- public SparseMat( int numRows, int numCols, E defaultVal)
- {
-    if ( numRows < MIN_SIZE || numCols < MIN_SIZE || defaultVal == null)
-       throw new IllegalArgumentException();
+   // constructor creates an empty Sublist (no indices)
+   public SparseMat( int numRows, int numCols, E defaultVal)
+   {
+      if ( numRows < MIN_SIZE || numCols < MIN_SIZE || defaultVal == null)
+         throw new IllegalArgumentException();
 
-    rowSize = numRows;
-    colSize = numCols;
-    allocateEmptyMatrix();
-    this.defaultVal = defaultVal;
- }
+      rowSize = numRows;
+      colSize = numCols;
+      allocateEmptyMatrix();
+      this.defaultVal = defaultVal;
+   }
 
- protected void allocateEmptyMatrix()
- {
-    int row;
-    rows = new FHarrayList < FHlinkedList< MatNode > >();
-    for (row = 0; row < rowSize; row++)
-       rows.add( new FHlinkedList< MatNode >());   // add a blank row
- }
+   protected void allocateEmptyMatrix()
+   {
+      int row;
+      rows = new FHarrayList < FHlinkedList< MatNode > >();
+      for (row = 0; row < rowSize; row++)
+         rows.add( new FHlinkedList< MatNode >());   // add a blank row
+   }
 
- public void clear()
- {
-    int row;
+   public void clear()
+   {
+      int row;
 
-    for (row = 0; row < rowSize; row++)
-       rows.get(row).clear();
- }
+      for (row = 0; row < rowSize; row++)
+         rows.get(row).clear();
+   }
 
- // optional method
- public Object clone() throws CloneNotSupportedException
- {
-    int row;
-    ListIterator<MatNode> iter;
-    FHlinkedList < MatNode > newRow;
+   // optional method
+   public Object clone() throws CloneNotSupportedException
+   {
+      int row;
+      ListIterator<MatNode> iter;
+      FHlinkedList < MatNode > newRow;
 
-    // shallow copy
-    SparseMat<E> newObject = (SparseMat<E>)super.clone();
+      // shallow copy
+      SparseMat<E> newObject = (SparseMat<E>)super.clone();
 
-    // create all new lists for the new object
-    newObject.allocateEmptyMatrix();
+      // create all new lists for the new object
+      newObject.allocateEmptyMatrix();
 
-    // deep stuff
-    for (row = 0; row < rowSize; row++)
-    {
-       newRow = newObject.rows.get(row);
-       for (
-             iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
-             iter.hasNext() ;
-             // iterate in loop body
-             )
-       {
-          newRow.add( (MatNode) iter.next().clone() );
-       }
-    }
+      // deep stuff
+      for (row = 0; row < rowSize; row++)
+      {
+         newRow = newObject.rows.get(row);
+         for (
+               iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
+               iter.hasNext() ;
+               // iterate in loop body
+               )
+         {
+            newRow.add( (MatNode) iter.next().clone() );
+         }
+      }
 
-    return newObject;
- }
+      return newObject;
+   }
 
- protected boolean valid(int row, int col)
- {
-    if (row >= 0 && row < rowSize && col >= 0 && col < colSize)
-       return true;
-    return false;
- }
+   protected boolean valid(int row, int col)
+   {
+      if (row >= 0 && row < rowSize && col >= 0 && col < colSize)
+         return true;
+      return false;
+   }
 
- public boolean set(int row, int col, E x)
- {
-    if (!valid(row, col))
-       return false;
+   public boolean set(int row, int col, E x)
+   {
+      if (!valid(row, col))
+         return false;
 
-    ListIterator<MatNode> iter;
+      ListIterator<MatNode> iter;
 
-    // iterate along the row, looking for column col
-    for (
-          iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
-          iter.hasNext() ;
-          // iterate in loop body
-          )
-    {
-       if ( iter.next().col == col )
-       {
-          if ( x.equals(defaultVal) )
-             iter.remove();
-          else
-             iter.previous().data = x;
-          return true;
-       }
-    }
+      // iterate along the row, looking for column col
+      for (
+            iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
+            iter.hasNext() ;
+            // iterate in loop body
+            )
+      {
+         if ( iter.next().col == col )
+         {
+            if ( x.equals(defaultVal) )
+               iter.remove();
+            else
+               iter.previous().data = x;
+            return true;
+         }
+      }
 
-    // not found
-    if ( !x.equals(defaultVal) )
-       rows.get(row).add( new MatNode(col, x) );
-    return true;
- }
+      // not found
+      if ( !x.equals(defaultVal) )
+         rows.get(row).add( new MatNode(col, x) );
+      return true;
+   }
 
- public E get(int row, int col)
- {
-    if (!valid(row, col))
-       throw new IndexOutOfBoundsException();
+   public E get(int row, int col)
+   {
+      if (!valid(row, col))
+         throw new IndexOutOfBoundsException();
 
-    ListIterator<MatNode> iter;
+      ListIterator<MatNode> iter;
 
-    // iterate along the row, looking for column col
-    for (
-          iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
-          iter.hasNext() ;
-          // iterate in loop body
-          )
-    {
-       if ( iter.next().col == col )
-          return iter.previous().data;
-    }
-    // not found
-    return defaultVal;
- }
+      // iterate along the row, looking for column col
+      for (
+            iter =  (ListIterator<MatNode>)rows.get(row).listIterator() ;
+            iter.hasNext() ;
+            // iterate in loop body
+            )
+      {
+         if ( iter.next().col == col )
+            return iter.previous().data;
+      }
+      // not found
+      return defaultVal;
+   }
 
- public void showSubSquare(int start, int size)
- {
-    int row, col;
+   public void showSubSquare(int start, int size)
+   {
+      int row, col;
 
-    if (start < 0 || size < 0
-          || start + size > rowSize
-          || start + size > colSize )
-       return;
+      if (start < 0 || size < 0
+            || start + size > rowSize
+            || start + size > colSize )
+         return;
 
-    for (row = start; row < start + size; row++)
-    {
-       for (col = start; col < start + size; col++)
-          System.out.print( String.format("%5.1f",
-                (Double)get(row, col)) + " " );
-       System.out.println();
-    }
-    System.out.println();
- }
+      for (row = start; row < start + size; row++)
+      {
+         for (col = start; col < start + size; col++)
+            System.out.print( String.format("%5.1f",
+                  (Double)get(row, col)) + " " );
+         System.out.println();
+      }
+      System.out.println();
+   }
 }
 
 
@@ -328,81 +379,72 @@ class SparseMat<E> implements Cloneable
 
 ---------------Run # 1 (M = 100) --------------
 
- **** Submatrices before multiplication: ****
+10x10 submatrix(lower right) before multiplication:
+  0.0   0.0   0.0   0.0   0.0   0.0   0.2   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.2   0.0   0.0   0.6   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.9   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.5   0.0   0.2   0.0   0.0   0.2 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.4   0.9   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.9 
+  0.8   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
 
-5x5 submatrix in lower right (for testing matricies with 5x5)
+10x10 submatrix(lower right) after multiplication:
+  0.0   0.0   0.8   0.6   0.7   0.4   0.4   0.0   0.0   0.5 
+  0.0   0.1   0.4   0.0   0.0   0.0   0.0   0.4   0.2   0.0 
+  0.0   0.0   0.8   0.0   0.2   0.5   0.0   0.0   0.0   0.0 
+  0.0   0.2   0.0   0.0   0.7   0.0   0.2   0.0   0.0   0.0 
+  0.7   0.0   0.8   0.0   0.0   0.5   0.0   0.0   0.6   0.6 
+  0.2   0.0   0.0   0.0   0.0   0.0   0.0   0.5   0.0   0.4 
+  0.0   0.0   0.0   0.0   0.0   0.5   0.2   0.5   0.5   0.0 
+  0.0   0.1   0.0   0.0   0.4   0.6   0.1   0.8   0.3   0.5 
+  0.7   0.0   0.2   0.1   0.0   0.4   0.2   0.6   0.0   0.0 
+  0.0   0.0   0.1   0.7   0.1   0.0   0.1   0.0   0.0   0.0 
+
+5x5 submatrix(lower right) before multiplication:
+  0.0   0.2   0.0   0.0   0.2 
   0.0   0.0   0.0   0.0   0.0 
-  0.6   0.0   0.0   0.0   0.5 
-  0.2   0.0   0.0   0.0   0.0 
-  0.7   0.0   0.0   0.0   0.7 
+  0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.9 
   0.0   0.0   0.0   0.0   0.0 
 
-10x10 submatrix in lower right (for testing matricies >= 10x10)
-  0.3   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   1.0 
-  0.6   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.1   0.0   0.0   0.0   0.0   0.7   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.2   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.6   0.0   0.0   0.0   0.5 
-  0.0   0.2   0.0   0.0   0.0   0.2   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.7   0.0   0.0   0.0   0.7 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+5x5 submatrix(lower right) after multiplication:
+  0.0   0.0   0.5   0.0   0.4 
+  0.5   0.2   0.5   0.5   0.0 
+  0.6   0.1   0.8   0.3   0.5 
+  0.4   0.2   0.6   0.0   0.0 
+  0.0   0.1   0.0   0.0   0.0 
 
 
- **** Submatrices after multiplication: ****
+Size = 100 Mat. Mult. Elapsed Time: 0.0155 seconds.
 
-5x5 submatrix in lower right (for testing matricies with 5x5)
-  0.2   0.5   0.0   0.4   0.1 
-  0.8   0.0   0.3   0.0   0.5 
-  0.2   1.2   0.2   0.4   0.0 
-  0.5   0.3   0.2   0.0   0.0 
-  0.0   0.0   0.1   0.0   0.0 
-
-10x10 submatrix in lower right (for testing matricies >= 10x10)
-  0.9   0.8   0.0   0.2   0.1   0.0   0.0   0.0   0.0   0.3 
-  1.1   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.2   0.6 
-  0.0   0.0   0.4   0.5   0.0   0.1   0.1   0.3   0.0   0.0 
-  0.2   0.3   0.0   0.0   0.0   0.1   0.1   0.0   0.0   0.1 
-  0.2   0.0   0.2   0.6   1.4   0.6   0.0   0.6   0.0   0.7 
-  0.0   0.3   0.1   0.4   0.2   0.2   0.5   0.0   0.4   0.1 
-  0.5   0.6   0.0   0.0   0.0   0.8   0.0   0.3   0.0   0.5 
-  0.4   0.3   0.5   0.6   0.0   0.2   1.2   0.2   0.4   0.0 
-  0.3   0.0   0.0   0.0   0.0   0.5   0.3   0.2   0.0   0.0 
-  0.4   0.2   0.0   0.2   0.0   0.0   0.0   0.1   0.0   0.0 
-
-
-Size = 100 Mat. Mult. Elapsed Time: 0.0191 seconds.
 
 ---------------Run # 2 (M = 5) --------------
 
- **** Submatrices before multiplication: ****
+5x5 submatrix(lower right) before multiplication:
+  0.0   0.0   0.3   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.4   0.0 
+  0.0   0.0   0.0   0.0   0.1 
+  0.0   0.0   0.0   0.0   0.0 
 
-5x5 submatrix in lower right (for testing matricies with 5x5)
-  0.0   0.0   0.1   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.3 
-  0.8   0.0   0.0   0.0   0.0 
+5x5 submatrix(lower right) after multiplication:
+  0.0   0.0   0.0   0.1   0.0 
+  0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0 
   0.0   0.0   0.0   0.0   0.0 
   0.0   0.0   0.0   0.0   0.0 
 
-10x10 submatrix in lower right (for testing matricies >= 10x10)
-
- **** Submatrices after multiplication: ****
-
-5x5 submatrix in lower right (for testing matricies with 5x5)
-  0.1   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.1   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-
-10x10 submatrix in lower right (for testing matricies >= 10x10)
 
 Size = 5 Mat. Mult. Elapsed Time: 0 seconds.
+
 
 -------Run #3 (M = 200) (without displaying matrices, per spec details)------
 
 Size = 200 Mat. Mult. Elapsed Time: 0.0592 seconds.
+
 
 -------Run #4 (M = 300) (without displaying matrices, per spec details)------
 
