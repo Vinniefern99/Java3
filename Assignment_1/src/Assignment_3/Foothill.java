@@ -1,43 +1,98 @@
 package Assignment_3;
 
-
 import java.text.NumberFormat;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Random;
-
+import java.util.*;
 import cs_1c.*;
 
 public class Foothill
 {
-   final static int MAT_SIZE = 400;
+   //change this variable to test different sizes
+   final static int MAT_SIZE = 100;
 
-   final static int MIN_SIZE_FOR_10X10_DISPLAY = 10;
-   final static int MIN_SIZE_FOR_5X5_DISPLAY = 5;
+   //don't change these
+   final static double DEFAULT_VAL = 0.;
+   final static int TEST_MAT_SIZE = 5;
 
    public static void main(String[] args) throws Exception
    {
+
       int r, randRow, randCol;
       long startTime, stopTime;
-      double defaultVal;
       double smallPercent;
       NumberFormat tidy = NumberFormat.getInstance(Locale.US);
       tidy.setMaximumFractionDigits(4);
 
       // non-sparse matrices
-      double[][] mat, matAns;
+      double[][] mat, matAns, mat5x5test1, mat5x5test2, mat5x5testAns;
 
-      defaultVal = 0.;
+      // Here's the manual 5x5 matrix to test algorithm  accuracy
+      mat5x5test1 = new double[TEST_MAT_SIZE][TEST_MAT_SIZE]; 
+      mat5x5test1[0][0] = 1.0;
+      mat5x5test1[0][1] = 2.0;
+      mat5x5test1[0][2] = 3.0;
+      mat5x5test1[0][3] = 4.0;
+      mat5x5test1[0][4] = 5.0;
+      mat5x5test1[1][0] = -1.0;
+      mat5x5test1[1][1] = -2.0;
+      mat5x5test1[1][2] = -3.0;
+      mat5x5test1[1][3] = -4.0;
+      mat5x5test1[1][4] = -5.0;
+      mat5x5test1[2][0] = 1.0;
+      mat5x5test1[2][1] = 3.0;
+      mat5x5test1[2][2] = 1.0;
+      mat5x5test1[2][3] = 3.0;
+      mat5x5test1[2][4] = 1.0;
+      mat5x5test1[3][0] = 0.0;
+      mat5x5test1[3][1] = 1.0;
+      mat5x5test1[3][2] = 0.0;
+      mat5x5test1[3][3] = 1.0;
+      mat5x5test1[3][4] = 0.0;
+      mat5x5test1[4][0] = -1.0;
+      mat5x5test1[4][1] = -1.0;
+      mat5x5test1[4][2] = -1.0;
+      mat5x5test1[4][3] = -1.0;
+      mat5x5test1[4][4] = -1.0;
 
-      // allocate matrices
+      mat5x5test2 = new double[TEST_MAT_SIZE][TEST_MAT_SIZE]; 
+      mat5x5test2[0][0] = 2.0;
+      mat5x5test2[0][1] = 1.0;
+      mat5x5test2[0][2] = 5.0;
+      mat5x5test2[0][3] = 0.0;
+      mat5x5test2[0][4] = 2.0;
+      mat5x5test2[1][0] = 1.0;
+      mat5x5test2[1][1] = 4.0;
+      mat5x5test2[1][2] = 3.0;
+      mat5x5test2[1][3] = 2.0;
+      mat5x5test2[1][4] = 7.0;
+      mat5x5test2[2][0] = 4.0;
+      mat5x5test2[2][1] = 4.0;
+      mat5x5test2[2][2] = 4.0;
+      mat5x5test2[2][3] = 4.0;
+      mat5x5test2[2][4] = 4.0;
+      mat5x5test2[3][0] = 7.0;
+      mat5x5test2[3][1] = 1.0;
+      mat5x5test2[3][2] = -1.0;
+      mat5x5test2[3][3] = -1.0;
+      mat5x5test2[3][4] = -1.0;
+      mat5x5test2[4][0] = 0.0;
+      mat5x5test2[4][1] = 0.0;
+      mat5x5test2[4][2] = 8.0;
+      mat5x5test2[4][3] = -1.0;
+      mat5x5test2[4][4] = -6.0;
+
+      //this matrix will be whatever size you put in MAT_SIZE
       mat = new double[MAT_SIZE][MAT_SIZE]; 
       for (int j = 0 ; j < MAT_SIZE ; j++)
          for (int k = 0 ; k < MAT_SIZE ; k++)
-            mat[j][k] = defaultVal;
+            mat[j][k] = DEFAULT_VAL;
 
       //don't need to allocate values to matAns, just initialize it
       //matMult() will give it values
       matAns = new double[MAT_SIZE][MAT_SIZE];
+
+      //This is the 5x5 test matrix
+      mat5x5testAns = new double[TEST_MAT_SIZE][TEST_MAT_SIZE];
+
 
       // generate small% of non-default values bet 0 and 1
       smallPercent = MAT_SIZE/10. * MAT_SIZE;
@@ -49,47 +104,51 @@ public class Foothill
          mat[randRow][randCol] = (double)Math.random();
       }
 
+      System.out.println("Instructor-provided 5x5 test matrix:\n");
+
       startTime = System.nanoTime();
-      matMult(mat, mat, matAns);
+      matMult(mat5x5test1, mat5x5test2, mat5x5testAns);
       stopTime = System.nanoTime();
 
-      System.out.println("** Part A **\n");
+      System.out.println(" First 5x5 matrix, n:");
+      matShow(mat5x5test1, 0, 5);
+      System.out.println(" Second 5x5 matrix, m:");
+      matShow(mat5x5test2, 0, 5);
+      System.out.println(" Product 5x5 Matrix, n x m:");
+      matShow(mat5x5testAns, 0, 5);
 
-      if (MAT_SIZE >= MIN_SIZE_FOR_10X10_DISPLAY)
-      {
-         // 10x10 submatrix in lower right
-         System.out.println("10x10 submatrix(lower right) before multiplication:");
-         matShow(mat, MAT_SIZE - 10, 10);
-
-         // 10x10 submatrix in lower right
-         System.out.println("10x10 submatrix(lower right) after multiplication:");
-         matShow(matAns, MAT_SIZE - 10, 10);
-      }
-
-      if (MAT_SIZE >= MIN_SIZE_FOR_5X5_DISPLAY)
-      {
-         // 5x5 submatrix in lower right
-         System.out.println("5x5 submatrix(lower right) before multiplication:");
-         matShow(mat, MAT_SIZE - 5, 5);
-
-         System.out.println("5x5 submatrix(lower right) after multiplication:");
-         matShow(matAns, MAT_SIZE - 5, 5);
-      }
-
-      System.out.println("\nSize = " + MAT_SIZE + " Mat. Mult. Elapsed Time: "
+      System.out.println("5x5 Test Mat. Mult. Elapsed Time: "
             + tidy.format( (stopTime - startTime) / 1e9)
             + " seconds.");
 
 
+      System.out.println("\n\nOutput for custom matrix:\n");
+
+      startTime = System.nanoTime();
+      matMult(mat, mat, matAns);
+      stopTime = System.nanoTime();
+
+      //Note: 10x10 display(lower right) will only work when matrix is >= 10x10
+      //lower right sub-matrix before multiplication:
+      matShow(mat, MAT_SIZE - 10, 10);
+      //lower right sub-matrix after multiplication:
+      matShow(matAns, MAT_SIZE - 10, 10);
+
+      System.out.println("Size = " + MAT_SIZE + " Mat. Mult. Elapsed Time: "
+            + tidy.format( (stopTime - startTime) / 1e9)
+            + " seconds.");
+
+      /*
       System.out.println("\n\n** Part B **\n");
 
 
-      //System.out.println(matAns[397][399]);
 
       SparseMatWMult sparseMat, sparseMatAns;
 
       sparseMat = new SparseMatWMult(MAT_SIZE, MAT_SIZE, defaultVal);
       sparseMatAns = new SparseMatWMult(MAT_SIZE, MAT_SIZE, defaultVal);
+
+      smallPercent = MAT_SIZE/100. * MAT_SIZE;
 
       for (r = 0; r < smallPercent; r++)
       {
@@ -99,11 +158,20 @@ public class Foothill
          sparseMat.set(randRow, randCol, (double)Math.random());
       }
 
-      sparseMat.showSubSquare(10, 10);
+      startTime = System.nanoTime();
       sparseMatAns.matMult(sparseMat, sparseMat);
+      stopTime = System.nanoTime();
 
-      sparseMatAns.showSubSquare(10, 10);
 
+      sparseMat.showSubSquare(0, 5);
+      sparseMatAns.showSubSquare(0, 5);
+
+      System.out.println("\nSize = " + MAT_SIZE + " Sparse Mat. "
+            + "Mult. Elapsed Time: "
+            + tidy.format( (stopTime - startTime) / 1e9)
+            + " seconds.");
+
+       */
    }
 
    public static void matMult( double[][] matA, double[][] matB, 
@@ -151,6 +219,8 @@ public class Foothill
 
 }
 
+/*
+
 // -------------------Part B --------------------------
 
 class SparseMatWMult extends SparseMat<Double>
@@ -167,29 +237,41 @@ class SparseMatWMult extends SparseMat<Double>
    public boolean matMult(SparseMatWMult matA, SparseMatWMult matB)
    {
       ListIterator<MatNode> iter;
+      ArrayList<Integer> matANonEmptyRows, matBNonEmptyRows;
+      int row;
+      matANonEmptyRows = new ArrayList<>();
+      matBNonEmptyRows = new ArrayList<>();
+
+      for (row = 0 ; row < matA.rowSize ; row++)
+         if (!matA.rows.get(row).isEmpty())
+            matANonEmptyRows.add(row);
+
+      for (row = 0 ; row < matB.rowSize ; row++)
+         if (!matB.rows.get(row).isEmpty())
+            matBNonEmptyRows.add(row);
 
 
-      for (int j = 0; j < this.rowSize; j++)
+      for (int j = 0 ; j < rowSize ; j++)
       {
-         for (int k = 0 ; k < this.rowSize ; k++)
+         if (matA.rows.get(j).isEmpty())
+            break;
+         for (int k = 0 ; k < colSize ; k++)
          {
-            double totalForCurrNode = defaultVal;
+            if (matB.rows.get(k).isEmpty())
+               break;
+            this.set(j, k, matB.get(k,j)*matB.get(j,k)); 
 
-            for (int l = 0; l < this.rowSize ; l++)
-            {
-               if (matA.get(j,l) != this.defaultVal &&
-                     matB.get(l, k) != this.defaultVal)
-                  totalForCurrNode += matA.get(j,l) * matB.get(l, k);
-            }  
 
-            if (totalForCurrNode != defaultVal)
-               this.set(j, k, totalForCurrNode);
          }
       }
+
+
 
       return true;
 
    }
+
+
 }
 
 
@@ -367,83 +449,74 @@ class SparseMat<E> implements Cloneable
    }
 }
 
-
+ */
 
 
 /*
 
 // -------------------------Test Runs -------------------------------
 
----------------Run # 1 (M = 100) --------------
+-------------Run # 1 (Instructor- provided M=5 and an M = 100) --------------
 
-10x10 submatrix(lower right) before multiplication:
+Instructor-provided 5x5 test matrix:
+
+ First 5x5 matrix, n:
+  1.0   2.0   3.0   4.0   5.0 
+ -1.0  -2.0  -3.0  -4.0  -5.0 
+  1.0   3.0   1.0   3.0   1.0 
+  0.0   1.0   0.0   1.0   0.0 
+ -1.0  -1.0  -1.0  -1.0  -1.0 
+
+ Second 5x5 matrix, m:
+  2.0   1.0   5.0   0.0   2.0 
+  1.0   4.0   3.0   2.0   7.0 
+  4.0   4.0   4.0   4.0   4.0 
+  7.0   1.0  -1.0  -1.0  -1.0 
+  0.0   0.0   8.0  -1.0  -6.0 
+
+ Product 5x5 Matrix, n x m:
+ 44.0  25.0  59.0   7.0  -6.0 
+-44.0 -25.0 -59.0  -7.0   6.0 
+ 30.0  20.0  23.0   6.0  18.0 
+  8.0   5.0   2.0   1.0   6.0 
+-14.0 -10.0 -19.0  -4.0  -6.0 
+
+5x5 Test Mat. Mult. Elapsed Time: 0 seconds.
+
+
+Output for custom matrix:
+
+  0.0   0.0   0.0   0.0   0.0   0.0   0.6   0.0   0.0   0.0 
+  0.0   0.0   0.3   0.9   0.0   0.0   0.0   0.3   0.1   0.0 
+  0.0   0.0   0.0   0.0   0.5   0.0   0.0   0.0   0.0   0.6 
+  0.0   0.0   0.5   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
   0.0   0.0   0.0   0.0   0.0   0.0   0.2   0.0   0.0   0.0 
+  0.1   0.0   0.0   0.0   0.0   0.0   0.5   0.0   0.0   0.0 
   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.2   0.0   0.0   0.6   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.9   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.5   0.0   0.2   0.0   0.0   0.2 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.4   0.9   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.9 
-  0.8   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.2   0.0 
+  0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.5 
 
-10x10 submatrix(lower right) after multiplication:
-  0.0   0.0   0.8   0.6   0.7   0.4   0.4   0.0   0.0   0.5 
-  0.0   0.1   0.4   0.0   0.0   0.0   0.0   0.4   0.2   0.0 
-  0.0   0.0   0.8   0.0   0.2   0.5   0.0   0.0   0.0   0.0 
-  0.0   0.2   0.0   0.0   0.7   0.0   0.2   0.0   0.0   0.0 
-  0.7   0.0   0.8   0.0   0.0   0.5   0.0   0.0   0.6   0.6 
-  0.2   0.0   0.0   0.0   0.0   0.0   0.0   0.5   0.0   0.4 
-  0.0   0.0   0.0   0.0   0.0   0.5   0.2   0.5   0.5   0.0 
-  0.0   0.1   0.0   0.0   0.4   0.6   0.1   0.8   0.3   0.5 
-  0.7   0.0   0.2   0.1   0.0   0.4   0.2   0.6   0.0   0.0 
-  0.0   0.0   0.1   0.7   0.1   0.0   0.1   0.0   0.0   0.0 
+  0.1   0.0   0.0   0.0   0.0   0.1   0.3   0.0   0.7   0.0 
+  0.5   1.4   1.0   0.5   0.2   0.0   0.0   0.0   0.6   0.4 
+  0.7   0.0   1.0   0.0   0.6   0.3   0.3   0.1   0.7   0.4 
+  0.0   0.1   0.0   0.1   0.4   0.2   0.4   0.1   0.3   0.9 
+  0.0   0.0   0.5   0.0   0.0   0.0   0.0   0.0   0.4   0.0 
+  0.6   0.1   0.7   0.6   0.4   0.3   0.2   0.8   0.4   0.0 
+  0.2   1.7   0.3   0.7   0.1   0.5   0.3   0.0   0.8   0.0 
+  0.2   0.4   0.0   0.7   0.0   0.0   0.1   0.0   0.2   0.1 
+  0.3   0.1   1.2   0.7   0.2   0.0   0.0   0.0   0.1   0.0 
+  0.8   0.5   0.1   0.1   0.2   0.0   0.0   0.3   1.2   0.3 
 
-5x5 submatrix(lower right) before multiplication:
-  0.0   0.2   0.0   0.0   0.2 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.9 
-  0.0   0.0   0.0   0.0   0.0 
-
-5x5 submatrix(lower right) after multiplication:
-  0.0   0.0   0.5   0.0   0.4 
-  0.5   0.2   0.5   0.5   0.0 
-  0.6   0.1   0.8   0.3   0.5 
-  0.4   0.2   0.6   0.0   0.0 
-  0.0   0.1   0.0   0.0   0.0 
+Size = 100 Mat. Mult. Elapsed Time: 0.0197 seconds.
 
 
-Size = 100 Mat. Mult. Elapsed Time: 0.0155 seconds.
-
-
----------------Run # 2 (M = 5) --------------
-
-5x5 submatrix(lower right) before multiplication:
-  0.0   0.0   0.3   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.4   0.0 
-  0.0   0.0   0.0   0.0   0.1 
-  0.0   0.0   0.0   0.0   0.0 
-
-5x5 submatrix(lower right) after multiplication:
-  0.0   0.0   0.0   0.1   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-  0.0   0.0   0.0   0.0   0.0 
-
-
-Size = 5 Mat. Mult. Elapsed Time: 0 seconds.
-
-
--------Run #3 (M = 200) (without displaying matrices, per spec details)------
+-------Run #2 (M = 200) (without displaying matrices, per spec details)------
 
 Size = 200 Mat. Mult. Elapsed Time: 0.0592 seconds.
 
 
--------Run #4 (M = 300) (without displaying matrices, per spec details)------
+-------Run #3 (M = 300) (without displaying matrices, per spec details)------
 
 Size = 300 Mat. Mult. Elapsed Time: 0.1939 seconds.
 
@@ -458,9 +531,12 @@ computing time complexity. What we need to look at are the three for loops,
 one nested within the second, which is nested within in the third. The inner 
 for loop is O(M), and so is the second one, and so is the third. So we multiply
 O(M * M * M), and we get O(M^3). Because each for loop will iterate exactly M
-times EACH AND EVERY time, that means Θ() is also Θ(M^3). Θ() would only 
+times EACH AND EVERY time, that means O() is also Theta(M^3). Theta() would only 
 different if there were a chance that the for loops iterated less than M
 each time. But that's not the case here.
+
+I noticed that run times differed on separate machines. My home computer
+was a slower than my work computer.
 
  **Answers to questions in spec:
 
@@ -470,6 +546,7 @@ each time. But that's not the case here.
 2. What happened when you doubled M, tripled it, quadrupled it, etc?  
 Give several M values and their times in a table.
 
+(runs on my home computer)
 M time table in factors of 20
  *M*      *Time in Seconds*
 20       0.0004
@@ -497,36 +574,72 @@ M time table in factors of 100
 1500     47.7805
 1600     59.4802
 
-M time table, doubling previous one
+Doubling M each time:
+ *M*      *Time in Seconds*
 100      0.0196
 200      0.0524
 400      0.5064
 800      5.9566
 1600     59.4802
 
-
-M time table, starting with 20 and increasing by 20^n
+Squaring M each time:
  *M*      *Time in Seconds*
 20       0.0004
 400      0.5058
-8000     OUT OF MEMORY
 
-M time table, starting with 5 and increasing by 5^n
+Squaring M each time:
  *M*      *Time in Seconds*
 5        0
 25       0.0089
 125      0.0234
 625      2.6974
 
+(runs on my work computer)
+
+ *M*      *Time in Seconds*
+100      0.0199
+200      0.0353
+400      0.1788
+800      4.5272
+1600     74.138
+3200
+
+Doubling M each time:
+ *M*      *Time in Seconds*
+2        0
+4        0
+8        0
+16       0.0003
+32       0.0018
+64       0.0158
+128      0.0388
+256      0.0484
+512      0.5096
+1024     13.989
+2048     172.7487
+
+Doubling M each time:
+ *M*      *Time in Seconds*
+10       0.0001
+20       0.0005
+40       0.0028
+80       0.0145
+160      0.0353
+320      0.1004 
+640      1.0513
+1280     34.2569  
+
 
 3. How large an M can you use before the program refuses to run 
 (exception or run-time error due to memory overload) or it takes so 
 long you can't wait for the run?
-I was able to go up to 1500, which took 47.7805 seconds. I didn't want to try
+I was able to go up to 2048, which took 172.7487 seconds. I didn't want to try
 to go higher and have to wait that long...
 
 4. How did the data agree or disagree with your original time complexity estimate?
-
+The tests are disagreeing with my estimates of time complexity, and my
+guess is that I cannot go high enough to get an accurate measurement without
+the memory crashing. 
 
 
  */
