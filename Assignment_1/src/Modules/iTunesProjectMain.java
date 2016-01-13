@@ -1,6 +1,6 @@
 package Modules;
 //Main file for iTunes project.  See Read Me file for details
-//CS 1C, Foothill College, Michael Loceff, creator
+//CS 1C, Foothill_Main1 College, Michael Loceff, creator
 
 import cs_1c.*;
 import java.util.*;

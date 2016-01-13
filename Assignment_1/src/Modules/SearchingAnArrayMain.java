@@ -1,6 +1,6 @@
 package Modules;
 // Main file for iTunes project - search example.
-// CIS CS 1C, Foothill College, Michael Loceff, creator
+// CIS CS 1C, Foothill_Main1 College, Michael Loceff, creator
 
 import cs_1c.*;
 import java.util.*;

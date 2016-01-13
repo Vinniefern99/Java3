@@ -1,6 +1,6 @@
 package Modules;
 //Main file for iTunes project - bubble sort example.
-//CS 1C, Foothill College, Michael Loceff, creator
+//CS 1C, Foothill_Main1 College, Michael Loceff, creator
 
 import cs_1c.*;
 import java.util.*;

@@ -4,66 +4,10 @@ import cs_1c.*;
 import java.text.*;
 import java.util.*;
 
-/*
-
-//---------------------------------------------------------------------------
-//------------------------------- PART A ------------------------------------
-//---------------------------------------------------------------------------
 
 
-//******    Part A - Sublist class    *******
-class Sublist implements Cloneable
-{
-   private int sum = 0;
-   private ArrayList<Integer> originalObjects;
-   private ArrayList<Integer> indices;
-
-   // constructor creates an empty Sublist (no indices)
-   public Sublist(ArrayList<Integer> orig) 
-   {
-      sum = 0;
-      originalObjects = orig;
-      indices = new ArrayList<Integer>();
-   }
-
-   int getSum() 
-   { 
-      return sum; 
-   }
-
-   Sublist addItem( int indexOfItemToAdd ) throws CloneNotSupportedException
-   { 
-      Sublist newSublist = (Sublist)clone();
-
-      newSublist.indices.add(indexOfItemToAdd);
-      newSublist.sum = newSublist.sum + originalObjects.get(indexOfItemToAdd);
-
-      return newSublist;
-   }
-
-   void showSublist()
-   { 
-      for (int k = 0 ; k < indices.size() ; k++)
-         System.out.println("  array[" + indices.get(k) + "] = " 
-               + originalObjects.get(indices.get(k)));
-   }
-
-   // I have done the clone() for you, since you will need it inside addItem().
-   // I moved the clone function to the end, cause that's what I'm used to.
-   public Object clone() throws CloneNotSupportedException
-   {
-      // shallow copy
-      Sublist newObject = (Sublist)super.clone();
-      // deep copy
-      newObject.indices = (ArrayList<Integer>)indices.clone();
-
-      return newObject;
-   }
-};
-
-
-//******    Part A - Main Foothill Client    *******
-public class Foothill
+//******    Part A - Main Foothill_Main1 Client    *******
+public class Foothill_Main1
 {
    // -------  main --------------
    @SuppressWarnings("unchecked")
@@ -295,8 +239,8 @@ class Sublist implements Cloneable
 };
 
 
-//******    Part B - Main Foothill Client    ******
-public class Foothill
+//******    Part B - Main Foothill_Main1 Client    ******
+public class Foothill_Main1
 {
    // -------  main --------------
    public static void main(String[] args) throws Exception
@@ -654,8 +598,8 @@ class Sublist<E> implements Cloneable
 };
 
 
-// ******    Part C - Main Foothill Client with Ints    ******
-public class Foothill
+// ******    Part C - Main Foothill_Main1 Client with Ints    ******
+public class Foothill_Main1
 {
    // -------  main --------------
    @SuppressWarnings("unchecked")
@@ -806,8 +750,8 @@ Sublist -------------------
 ---------------------------------------------------------------------------*/
 /*
 
-//******    Part C - Main Foothill Client with iTunesEntrys    ******
-public class Foothill
+//******    Part C - Main Foothill_Main1 Client with iTunesEntrys    ******
+public class Foothill_Main1
 {
    // -------  main --------------
    @SuppressWarnings("unchecked")

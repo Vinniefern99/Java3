@@ -1,7 +1,7 @@
 package modules_3;
 
 //Sample timing complexity of a linear search
-//CS 1C, Foothill College, Michael Loceff
+//CS 1C, Foothill_Main1 College, Michael Loceff
 
 //client -----------------------------------------------------
 

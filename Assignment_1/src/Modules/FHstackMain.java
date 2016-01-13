@@ -1,6 +1,6 @@
 package Modules;
 // FHstack main
-// CS 1C, Foothill College, Michael Loceff, creator
+// CS 1C, Foothill_Main1 College, Michael Loceff, creator
 
 // import statement needed to gain access to the entire class
 import cs_1c.*;

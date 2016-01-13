@@ -1,14 +1,13 @@
 package Assignment_1;
 
 
-
 //CIS 1C Assignment #1
 //Part A - int version
 
 import java.util.*;
 
 //------------------------------------------------------
-public class Foothill_ModelSulution
+public class Foothill_Main2
 {
 // -------  main --------------
 public static void main(String[] args) throws Exception
@@ -100,6 +99,7 @@ static void showEntireVector( ArrayList<Integer> data )
 }
 }
 
+/*
 
 //--------------- Class Sublist Definition ---------------
 class Sublist implements Cloneable

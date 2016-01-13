@@ -1,6 +1,6 @@
 package Modules;
 //Main file for arrays vs. ArrayList
-//CS 1C, Foothill College, Michael Loceff, creator
+//CS 1C, Foothill_Main1 College, Michael Loceff, creator
 
 import java.util.*;
 import java.text.*;
