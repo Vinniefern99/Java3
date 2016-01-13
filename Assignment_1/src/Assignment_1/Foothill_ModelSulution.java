@@ -1,6 +1,5 @@
 package Assignment_1;
 
-/*
 
 
 //CIS 1C Assignment #1
@@ -850,4 +849,3 @@ Algorithm Elapsed Time: 0.3242 seconds.
 
 
 
-*/
